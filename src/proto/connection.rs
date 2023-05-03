@@ -54,9 +54,6 @@ where
     /// Stream state handler
     streams: Streams<B, P>,
 
-    /// A `tracing` span tracking the lifetime of the connection.
-    span: tracing::Span,
-
     /// Client or server
     _phantom: PhantomData<P>,
 }
@@ -137,7 +134,6 @@ where
                 ping_pong: PingPong::new(),
                 settings: Settings::new(config.settings),
                 streams,
-                span: tracing::debug_span!("Connection", peer = %P::NAME),
                 _phantom: PhantomData,
             },
         }
@@ -184,7 +180,6 @@ where
     /// Returns `Error` as this may raise errors that are caused by delayed
     /// processing of received frames.
     fn poll_ready(&mut self, cx: &mut Context) -> Poll<Result<(), Error>> {
-        let _e = self.inner.span.enter();
         let span = tracing::trace_span!("poll_ready");
         let _e = span.enter();
         // The order of these calls don't really matter too much
@@ -252,8 +247,6 @@ where
         // order to placate the borrow checker — `self` is mutably borrowed by
         // `poll2`, which means that we can't borrow `self.span` to enter it.
         // The clone is just an atomic ref bump.
-        let span = self.inner.span.clone();
-        let _e = span.enter();
         let span = tracing::trace_span!("poll");
         let _e = span.enter();
 
