@@ -277,14 +277,7 @@ impl Stream {
         debug_assert!(capacity > 0);
         self.send_flow.assign_capacity(capacity);
 
-        tracing::trace!(
-            "  assigned capacity to stream; available={}; buffered={}; id={:?}; max_buffer_size={} prev={}",
-            self.send_flow.available(),
-            self.buffered_send_data,
-            self.id,
-            max_buffer_size,
-            prev_capacity,
-        );
+
 
         if prev_capacity < self.capacity(max_buffer_size) {
             self.notify_capacity();
@@ -301,14 +294,7 @@ impl Stream {
         self.buffered_send_data -= len as usize;
         self.requested_send_capacity -= len;
 
-        tracing::trace!(
-            "  sent stream data; available={}; buffered={}; id={:?}; max_buffer_size={} prev={}",
-            self.send_flow.available(),
-            self.buffered_send_data,
-            self.id,
-            max_buffer_size,
-            prev_capacity,
-        );
+
 
         if prev_capacity < self.capacity(max_buffer_size) {
             self.notify_capacity();
@@ -319,7 +305,7 @@ impl Stream {
     /// then consider waking the send task again...
     pub fn notify_capacity(&mut self) {
         self.send_capacity_inc = true;
-        tracing::trace!("  notifying task");
+
         self.notify_send();
     }
 

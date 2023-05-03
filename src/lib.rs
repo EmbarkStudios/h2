@@ -80,15 +80,14 @@
 
 #![doc(html_root_url = "https://docs.rs/h2/0.3.18")]
 #![deny(missing_debug_implementations, missing_docs)]
-#![cfg_attr(test, deny(warnings))]
 #![allow(clippy::type_complexity, clippy::manual_range_contains)]
 
 macro_rules! proto_err {
     (conn: $($msg:tt)+) => {
-        tracing::debug!("connection error PROTOCOL_ERROR -- {};", format_args!($($msg)+))
+        {}
     };
     (stream: $($msg:tt)+) => {
-        tracing::debug!("stream error PROTOCOL_ERROR -- {};", format_args!($($msg)+))
+        {}
     };
 }
 

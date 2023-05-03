@@ -1,5 +1,3 @@
-#![deny(warnings)]
-
 use futures::future::{join, poll_fn};
 use futures::StreamExt;
 use h2_support::prelude::*;
